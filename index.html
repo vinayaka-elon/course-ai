@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning with AI: course review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --paper:#f8f2ef; --paper2:#ffffff;
+  --ink:#1f1416; --body:#4a3c3e; --mute:#8a7b7c; --line:#e1d2cd; --line2:#efe5e1;
+  --sage:#527b82; --sage-soft:#e6eff0;
+  --clay:#b7410e; --clay-soft:#f8e6dc;
+  --ochre:#b59a57; --ochre-soft:#f7f0de;
+  --plum:#8a2b3a; --plum-soft:#f6e6e8;
+  --lagoon:#73000a; --lagoon-soft:#f8eceb;
+  --ac:var(--lagoon); --ac-soft:var(--lagoon-soft);
+  --sans:'Instrument Sans',system-ui,sans-serif; --serif:'Instrument Serif',Georgia,serif; --mono:'Instrument Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;overflow-x:hidden}
+button,input,textarea{font-family:inherit;color:inherit;font-size:inherit}
+h1,h2{margin:0;font-weight:700;letter-spacing:-.5px}
+
+/* organic backdrop */
+.blob{position:fixed;z-index:0;filter:blur(2px);opacity:.55;pointer-events:none}
+.b1{width:420px;height:420px;top:-140px;right:-120px;background:var(--ochre-soft);border-radius:58% 42% 63% 37% / 45% 55% 45% 55%;animation:morph 18s ease-in-out infinite}
+.b2{width:360px;height:360px;bottom:-120px;left:-120px;background:var(--sage-soft);border-radius:42% 58% 36% 64% / 58% 42% 58% 42%;animation:morph 22s ease-in-out infinite reverse}
+.b3{width:240px;height:240px;top:40%;right:-100px;background:var(--plum-soft);border-radius:63% 37% 54% 46% / 55% 48% 52% 45%;animation:morph 26s ease-in-out infinite}
+@keyframes morph{0%,100%{border-radius:58% 42% 63% 37% / 45% 55% 45% 55%;transform:rotate(0)}50%{border-radius:40% 60% 38% 62% / 60% 40% 60% 40%;transform:rotate(12deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.7)}60%{opacity:1;transform:scale(1.08)}100%{transform:scale(1)}}
+
+.wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:40px 18px 80px}
+.hero{padding:10px 4px 22px}
+.hero .kick{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--lagoon);background:var(--lagoon-soft);padding:5px 14px;border-radius:999px}
+.hero .kick i{width:8px;height:8px;border-radius:50%;background:var(--lagoon);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.4}}
+.hero h1{font-size:clamp(36px,8vw,58px);line-height:1.02;margin-top:16px}
+.hero h1 span{color:var(--clay)}
+.hero p{color:var(--body);font-size:18px;margin:14px 0 0;max-width:560px}
+
+.card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:28px 26px;margin:18px 0;animation:rise .45s ease-out both;transition:box-shadow .2s}
+.card::before{content:"";position:absolute;left:26px;top:-1px;width:56px;height:5px;border-radius:0 0 6px 6px;background:var(--ac)}
+.card.miss{box-shadow:0 0 0 3px var(--clay)}
+@media (max-width:560px){ .card{padding:22px 18px;border-radius:22px} }
+.qt{font-size:21px;font-weight:600;line-height:1.3;letter-spacing:-.2px}
+
+.email{display:flex;gap:10px;align-items:center;margin-top:14px}
+.email input{flex:1;border:2px solid var(--line);border-radius:999px;padding:13px 20px;background:var(--paper2);font-size:17px;min-width:0}
+.email input:focus{outline:none;border-color:var(--ac)}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.chip{cursor:pointer;border:2px solid var(--line);background:var(--paper2);border-radius:999px;padding:10px 18px;font-size:16px;transition:all .15s;text-align:left}
+.chip:hover{border-color:var(--ac);transform:translateY(-1px)}
+.chip.other{border-style:dashed}
+.otherin{display:block;width:100%;margin-top:12px;border:2px solid var(--ac);border-radius:999px;padding:12px 20px;background:var(--paper2);font-size:16px;animation:rise .25s ease-out}
+.otherin:focus{outline:none}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:500;animation:pop .25s ease-out}
+
+/* human or ai */
+.tset{background:linear-gradient(160deg,var(--lagoon-soft),var(--paper) 55%)}
+.ask{margin-top:12px;font-size:18px;font-weight:500;color:var(--lagoon)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){ .pair{grid-template-columns:1fr} }
+.ans{position:relative;display:block;width:100%;text-align:left;cursor:pointer;border:2px solid var(--line);border-radius:22px;background:var(--paper);padding:18px 18px 20px;font-size:16px;line-height:1.55;color:var(--body);transition:transform .18s,border-color .18s,box-shadow .18s}
+.ans:hover:not(:disabled){transform:translateY(-3px) rotate(-.4deg);border-color:var(--lagoon);box-shadow:0 10px 24px rgba(47,111,115,.12)}
+.ans:nth-child(2):hover:not(:disabled){transform:translateY(-3px) rotate(.4deg)}
+.ans:disabled{cursor:default}
+.ans .lt{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:46% 54% 50% 50%;background:var(--ochre);color:#fff;font-weight:700;font-size:14px;margin-bottom:10px}
+.ans .who{position:absolute;top:16px;right:16px;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;color:#fff;animation:pop .35s ease-out both}
+.ans.human{border-color:var(--sage);background:var(--sage-soft)} .ans.human .who{background:var(--sage)}
+.ans.ai{opacity:.75} .ans.ai .who{background:var(--plum)}
+.ans.picked.ai{opacity:1;border-color:var(--clay)}
+.vd{margin-top:12px;font-weight:600;animation:pop .35s ease-out both}
+.vd.y{color:var(--sage)} .vd.n{color:var(--clay)}
+
+/* abilities */
+.ab{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 0;border-top:1px dashed var(--line)}
+.ab:first-of-type{border-top:0;margin-top:8px}
+.seg{display:flex;gap:6px}
+.seg button{cursor:pointer;border:2px solid var(--line);background:var(--paper2);border-radius:999px;padding:7px 13px;font-size:14px;white-space:nowrap;transition:all .15s}
+.seg button:hover{border-color:var(--mute)}
+.seg button.on.v0{background:var(--plum);border-color:var(--plum);color:#fff}
+.seg button.on.v1{background:var(--ochre);border-color:var(--ochre);color:#fff}
+.seg button.on.v2{background:var(--sage);border-color:var(--sage);color:#fff}
+@media (max-width:620px){ .ab{grid-template-columns:1fr} .seg button{flex:1;padding:8px 4px;font-size:13px} }
+
+/* closeness */
+.dial{display:flex;align-items:center;gap:18px;margin-top:16px;flex-wrap:wrap}
+.big{font-size:60px;font-weight:700;line-height:1;color:var(--ochre);min-width:96px;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:6px;flex:1;min-width:240px}
+.dots button{flex:1;height:34px;border:0;cursor:pointer;background:var(--line2);border-radius:50%;transition:background .15s,transform .15s}
+.dots button:hover{transform:scale(1.12)}
+.dots button.on{background:var(--ochre)}
+.ends{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);margin-top:6px}
+
+textarea{width:100%;border:2px solid var(--line);border-radius:20px;padding:14px 18px;background:var(--paper2);min-height:96px;margin-top:14px;resize:vertical;font-size:17px}
+textarea:focus{outline:none;border-color:var(--ac)}
+
+.go{display:block;width:100%;cursor:pointer;margin-top:26px;border:0;border-radius:999px;padding:18px;font-size:19px;font-weight:600;color:#fff;background:linear-gradient(120deg,var(--lagoon),var(--plum));box-shadow:0 10px 26px rgba(47,111,115,.25);transition:transform .15s}
+.go:hover{transform:translateY(-2px)}
+.go:disabled{opacity:.6;cursor:default}
+.err{color:var(--clay);font-weight:500;text-align:center;margin-top:12px;min-height:24px}
+.warn{background:var(--clay-soft);color:var(--clay);border-radius:16px;padding:12px 16px;font-size:15px;margin:12px 0}
+
+/* summary */
+.sum{animation:rise .5s ease-out both}
+.persona{position:relative;overflow:hidden;border-radius:30px;padding:34px 28px;color:#fff;background:linear-gradient(135deg,var(--lagoon),var(--plum) 70%,var(--clay))}
+.persona::after{content:"";position:absolute;width:260px;height:260px;right:-80px;top:-90px;background:rgba(255,255,255,.12);border-radius:58% 42% 63% 37% / 45% 55% 45% 55%;animation:morph 14s ease-in-out infinite}
+.persona .k{font-size:14px;opacity:.85}
+.persona h1{font-size:clamp(32px,7vw,46px);line-height:1.05;margin-top:6px}
+.persona p{margin:10px 0 0;opacity:.92;max-width:520px}
+.badge{display:inline-block;margin-top:16px;background:rgba(255,255,255,.18);padding:6px 14px;border-radius:999px;font-weight:600;font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:620px){ .grid{grid-template-columns:1fr} }
+.tile{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:20px 22px}
+.tile .l{font-size:13px;color:var(--mute)}
+.tile .v{font-size:20px;font-weight:600;margin-top:4px;line-height:1.3}
+.tile.wide{grid-column:1/-1}
+.tdots{display:flex;gap:8px;margin-top:10px}
+.tdots span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:15px;font-weight:700;animation:pop .4s ease-out both}
+.tdots .y{background:var(--sage)} .tdots .n{background:var(--clay)}
+.meter{height:14px;border-radius:7px;background:var(--line2);margin-top:12px;position:relative}
+.meter i{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:var(--ochre);border:3px solid var(--paper);transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.meter b{position:absolute;top:-6px;width:3px;height:26px;background:var(--mute);border-radius:2px;transform:translateX(-50%)}
+.mrow{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);margin-top:10px}
+.cmp{display:grid;gap:8px;margin-top:10px}
+.cmp div{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;font-size:15px}
+.pill{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.p0{background:var(--plum-soft);color:var(--plum)} .p1{background:var(--ochre-soft);color:#9A7220} .p2{background:var(--sage-soft);color:var(--sage)} .pm{background:var(--paper2);color:var(--mute);border:1px solid var(--line)}
+.quote{font-size:20px;font-weight:500;line-height:1.4;margin-top:6px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.ghostbtn{cursor:pointer;border:2px solid var(--line);background:var(--paper);border-radius:999px;padding:11px 20px;font-weight:600}
+.ghostbtn:hover{border-color:var(--lagoon)}
+
+/* results */
+.rtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.rtop h1{font-size:34px;flex:1 1 280px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:18px}
+.kpi b{display:block;font-size:34px;line-height:1.1;color:var(--c)}
+.kpi span{font-size:14px;color:var(--mute)}
+.lab{display:flex;justify-content:space-between;gap:12px;font-size:15px;margin:14px 0 6px}
+.stk{display:flex;height:26px;border-radius:13px;overflow:hidden;background:var(--line2);font-size:12px;font-weight:600;color:#fff}
+.stk div{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;transition:width .6s ease}
+.ks{background:var(--sage)} .kc{background:var(--clay)} .kg{background:#A39C8F} .kp{background:var(--plum)} .ko{background:var(--ochre)}
+.lg{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mute);margin-top:12px}
+.lg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--c)}
+.hb{display:grid;grid-template-columns:minmax(120px,40%) 1fr 46px;gap:12px;align-items:center;margin:9px 0;font-size:15px}
+.hb .tr{height:14px;background:var(--line2);border-radius:7px;overflow:hidden}
+.hb .tr i{display:block;height:100%;background:var(--c);border-radius:7px;transition:width .6s ease}
+.hb b{text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:620px){ .hb{grid-template-columns:1fr 46px} .hb .tr{grid-column:1/-1;order:3} }
+.hist{display:flex;align-items:flex-end;gap:5px;height:130px;margin-top:10px}
+.hist div{flex:1;background:var(--ochre);border-radius:10px 10px 4px 4px;min-height:3px;transition:height .6s ease}
+.quotes{display:grid;gap:8px;margin-top:6px}
+.quotes div{background:var(--paper2);border-radius:16px;padding:10px 16px}
+.src{font-size:13px;color:var(--mute);margin-top:12px}
+.hidden{display:none}
+
+/* Studio Light overrides */
+.blob{display:none}
+h1,h2{font-weight:600;letter-spacing:-.03em}
+.wrap{max-width:820px}
+.hero{padding:18px 4px 26px}
+.hero .kick{font:500 13px var(--mono);color:#fff;background:var(--lagoon);letter-spacing:0}
+.hero .kick i{background:#fff}
+.hero h1{font-size:clamp(40px,8vw,64px);line-height:1.02}
+.hero h1 span{font-weight:400;color:var(--lagoon);letter-spacing:-.035em}
+.hero p{color:var(--body)}
+.card{background:var(--paper);border:0;border-radius:20px;box-shadow:none}
+.card::before{left:26px;width:36px;height:4px;top:0}
+.card.miss{box-shadow:0 0 0 2px var(--clay)}
+.qt{font-weight:600;letter-spacing:-.01em}
+.email input,textarea{border:1.5px solid var(--line);background:#fff}
+.chip{border:1.5px solid var(--line);background:#fff}
+.chip.on{background:var(--ac);border-color:var(--ac)}
+.otherin{background:#fff}
+.seg button{border:1.5px solid var(--line);background:#fff}
+.seg button.on.v0{background:var(--clay);border-color:var(--clay)}
+.seg button.on.v1{background:var(--ochre);border-color:var(--ochre)}
+.seg button.on.v2{background:var(--sage);border-color:var(--sage)}
+.ab{border-top:1px solid var(--line2)}
+.big{font-weight:500;color:var(--lagoon);font-size:56px;letter-spacing:-.03em}
+.dots button{background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)}
+.dots button.on{background:var(--lagoon);box-shadow:none}
+.ends,.tile .l,.kpi span,.mrow,.src,.lg{font-family:var(--mono);font-size:12.5px}
+.go{background:var(--lagoon);box-shadow:0 14px 30px -14px rgba(115,0,10,.55)}
+.persona{background:radial-gradient(500px 300px at 100% 0,#a3101d,transparent 70%),var(--lagoon);border-radius:24px}
+.persona::after{display:none}
+.persona .k{font-family:var(--mono);font-size:13px}
+.persona h1{font-weight:500;font-size:clamp(34px,6vw,48px);letter-spacing:-.03em}
+.tile{background:var(--paper);border:0;border-radius:18px}
+.tile .v{font-weight:600}
+.quote{font-size:21px;font-weight:400;color:var(--ink)}
+.meter{background:#fff}
+.meter i{background:var(--lagoon);border-color:var(--paper)}
+.kpi{background:var(--paper);border:0}
+.kpi b{font-weight:600;letter-spacing:-.02em}
+.ghostbtn{border:1.5px solid var(--line);background:#fff}
+.ghostbtn:hover{border-color:var(--lagoon)}
+.quotes div{background:#fff}
+.hist div{background:var(--lagoon)}
+.stk{background:#fff}
+.hb .tr{background:#fff}
+.warn{font-size:14px}
+.p0{background:var(--clay-soft);color:var(--clay)} .p1{background:var(--ochre-soft);color:#7a6224} .p2{background:var(--sage-soft);color:var(--sage)}
+.kg{background:#b8aaa6}
+
+/* slider */
+.sl{margin-top:18px}
+.slv{font-size:44px;font-weight:500;letter-spacing:-.03em;color:var(--lagoon);line-height:1;margin-bottom:16px;min-height:44px}
+.rng.untouched ~ .ticks{opacity:.8}
+.sl:has(.rng.untouched) .slv{font-size:18px;font-weight:500;color:var(--mute);min-height:44px;display:flex;align-items:flex-end}
+.rng{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--ac) var(--p,50%),#fff var(--p,50%));box-shadow:inset 0 0 0 1.5px var(--line);outline:none;cursor:pointer;margin:6px 0}
+.rng.untouched{background:#fff}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:30px;border-radius:5px;background:var(--ac);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.rng::-moz-range-thumb{width:14px;height:30px;border-radius:5px;background:var(--ac);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.rng.untouched::-webkit-slider-thumb{background:var(--mute)}
+.rng.untouched::-moz-range-thumb{background:var(--mute)}
+.ticks{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--mute);margin-top:8px}
+.ends{margin-top:2px}
+.chips.multi .chip{border-radius:12px}
+.chips.multi .chip.on::before{content:"✓ ";}
+.meter{height:10px;border-radius:6px;box-shadow:inset 0 0 0 1.5px var(--line)}
+.meter i{width:12px;height:26px;border-radius:4px;border:3px solid var(--paper)}
+.consent .ctext{background:#fff;border-radius:14px;padding:14px 18px;max-height:none;margin:6px 0 14px;font-size:15px;line-height:1.55;color:var(--body)}
+.consent .ctext p{margin:0 0 8px}.consent .ctext b{color:var(--ink)}.consent .ctext .who{font-size:13px;color:var(--mute);margin:10px 0 0}
+.consent .chips{flex-direction:column;align-items:stretch}.consent .chip{text-align:left;border-radius:14px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}.steps span{font:600 13px var(--sans);color:var(--mute);background:var(--paper);border-radius:999px;padding:7px 14px}
+.steps span.dn{color:var(--lagoon)}.steps span.on{background:var(--lagoon);color:#fff}
+.hint{font-size:14px;color:var(--mute);margin:10px 4px 0}
+.back{margin:0 0 14px}
+.sent{font-size:15px;color:var(--body);text-align:center;margin:14px 0 0}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============ CONFIG ============ */
+// Paste the Google Apps Script web app URL (ends in /exec) between the quotes.
+const SCRIPT_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+// Survey: index.html   Per section: index.html?section=A   Live class results: index.html?results  (or ?results&section=A)
+/* ================================ */
+(function(){
+"use strict";
+const params = new URLSearchParams(location.search);
+const SECTION = (params.get('section') || '').slice(0, 20);
+const CONNECTED = /^https:\/\/script\.google\.com\//.test(SCRIPT_URL);
+const app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct = (n, d) => d ? Math.round(100 * n / d) : 0;
+const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+
+/* ---------- questions ---------- */
+const HELP = ["Lectures and slides","Practice notebooks","Interactive web pages","In-class activities and discussions","Quizzes","Office hours and tutoring","AI tools"];
+const PACE = ["Too fast","About right","Too slow"];
+const FREQ = ["Every session","Most weeks","A few times","Once or twice","Never"];
+const TOOL = ["ChatGPT","Claude","Gemini","Copilot","AI built into Colab or Jupyter"];
+const MAINUSE = ["Understanding a concept","Fixing an error message","Writing code from scratch","Explaining code I was given","Reading output and statistics","Writing up results","Studying for quizzes"];
+const WORKED = ["Asking for hints, not answers","Getting an error explained","Seeing a worked example","Having it quiz me","Comparing its code with mine","Asking why, line by line","Nothing worked well"];
+const FAILED = ["Code ran but gave wrong results","Used methods we had not learned","Answers too long or confusing","I could not explain the code later","Fixed one bug, made another","Made-up functions or settings","Nothing went wrong"];
+const CHANGE = ["Much more confident","Somewhat more confident","About the same","Less confident"];
+const FUT = ["More worried than hopeful","Equally worried and hopeful","More hopeful than worried"];
+const SKILL = ["Asking the right business question","Checking and testing AI output","Writing code","Statistics and modeling","Explaining results to people","Knowing the industry"];
+const KEEP = ["Yes, in more classes or a career","For my own projects","Only if a job asks for it","Probably not"];
+
+const HAB = ["Never","Sometimes","Often"];
+const HABITS = [
+  ["h_attempt","Tried the problem myself before asking", 1],
+  ["h_explain","Asked it to explain code or an error", 1],
+  ["h_test","Ran and tested its code before using it", 1],
+  ["h_rewrite","Rewrote its code in my own way", 1],
+  ["h_catch","Caught a mistake it made", 1],
+  ["h_whole","Asked for the whole solution", -1],
+  ["h_paste","Pasted code I did not fully understand", -1]
+];
+const AGR = ["Disagree","Not sure","Agree"];
+const VIEWS = [
+  ["v_alone","I can write a short Python analysis on my own"],
+  ["v_enjoy","I enjoy coding"],
+  ["v_errors","Error messages no longer scare me"],
+  ["v_understand","I understand the code I submit"],
+  ["v_learn","AI helped me learn to code"],
+  ["v_skip","AI made it easy to skip the learning"],
+  ["v_worth","Learning to code is worth it even when AI can write code"]
+];
+
+const AIVIEWS = [
+  ["a_check","I check AI-generated code before I trust it"],
+  ["a_when","I know when not to use AI"],
+  ["a_wrong","AI is often confidently wrong"],
+  ["a_fair","Using AI on coursework is fair when I say how I used it"],
+  ["a_allow","AI should be allowed on every assignment"],
+  ["a_employ","Employers expect graduates to work with AI"]
+];
+const GRIDS = { habits:HABITS, views:VIEWS, aiviews:AIVIEWS };
+
+const CONSENT = ["Agree","Disagree"];
+const SINGLE = [
+  { id:'consent', ac:'plum', q:'', opts:CONSENT },
+  { id:'help', ac:'ochre', q:"What helped you learn? Pick all that apply.", opts:HELP, other:true, multi:true },
+  { id:'pace', ac:'sage', q:"The pace of the course felt...", opts:PACE },
+  { id:'freq', ac:'ochre', q:"How often did you use AI for work in this course?", opts:FREQ },
+  { id:'tool', ac:'plum', q:"Which AI tools did you use? Pick all that apply.", opts:TOOL, other:true, multi:true },
+  { id:'mainuse', ac:'lagoon', q:"What did you use AI for? Pick all that apply.", opts:MAINUSE, other:true, multi:true },
+  { id:'worked', ac:'sage', q:"What worked for you? Pick all that apply.", opts:WORKED, other:true, multi:true, excl:"Nothing worked well" },
+  { id:'failed', ac:'clay', q:"What went wrong? Pick all that apply.", opts:FAILED, other:true, multi:true, excl:"Nothing went wrong" },
+  { id:'change', ac:'ochre', q:"Compared with the start of the course, how do you feel about coding?", opts:CHANGE },
+  { id:'future', ac:'plum', q:"Thinking about coding and analytics jobs over the next five years, you feel...", opts:FUT },
+  { id:'skill', ac:'lagoon', q:"Which skill will matter most for an analyst who works with AI?", opts:SKILL, other:true },
+  { id:'keep', ac:'sage', q:"Will you keep coding after this course?", opts:KEEP }
+];
+const DOTS = [
+  { id:'redo', ac:'lagoon', q:"Without AI, how much of the code you submitted could you write again today?", lo:'None of it', hi:'All of it', unit:'%' },
+  { id:'share2030', ac:'ochre', q:"By 2030, how much of an entry-level analyst’s coding will AI do?", lo:'Almost none', hi:'Almost all', unit:'%' }
+];
+const A = {}, M = {};   // M: multi-select state {id: Set of options, plus '__other'}
+const MULTI = SINGLE.filter(s => s.multi).map(s => s.id);
+const joinM = id => { const set = M[id] || new Set(), o = document.getElementById('o_' + id);
+  return [...S(id).opts.filter(x => set.has(x)), ...(set.has('__other') && o && o.value.trim() ? [o.value.trim()] : [])].join('; '); };
+const mOk = id => { const set = M[id] || new Set(), o = document.getElementById('o_' + id);
+  return set.size > 0 && (!set.has('__other') || (o && o.value.trim())); };
+const never = () => A.freq === 'Never';
+
+/* ============ SURVEY ============ */
+function acc(c){ return `--ac:var(--${c});--ac-soft:var(--${c}-soft)`; }
+function chipCard(s){
+  return `<section class="card" id="c_${s.id}" style="${acc(s.ac)}"><div class="qt">${esc(s.q)}</div>
+    <div class="chips${s.multi ? ' multi' : ''}" data-id="${s.id}">${s.opts.map((o, i) => `<button type="button" class="chip" data-i="${i}">${esc(o)}</button>`).join('')}${s.other ? '<button type="button" class="chip other" data-i="other">Something else...</button>' : ''}</div>
+    ${s.other ? `<input class="otherin hidden" id="o_${s.id}" maxlength="120" placeholder="Type your own answer">` : ''}</section>`;
+}
+function gridCard(id, ac, q, items, scale){
+  return `<section class="card" id="c_${id}" style="${acc(ac)}"><div class="qt">${esc(q)}</div>` +
+    items.map(([k, n]) => `<div class="ab"><div>${esc(n)}</div><div class="seg" data-k="${k}" data-g="${id}">${scale.map((c, i) => `<button type="button" class="v${i}" data-v="${c}">${c}</button>`).join('')}</div></div>`).join('') + `</section>`;
+}
+function dotCard(d){
+  return `<section class="card" id="c_${d.id}" style="${acc(d.ac)}"><div class="qt">${esc(d.q)}</div>
+    <div class="sl"><div class="slv" id="big_${d.id}">Drag to answer</div>
+    <input type="range" class="rng untouched" min="0" max="100" step="5" value="50" data-id="${d.id}" aria-label="${esc(d.q)}">
+    <div class="ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+    <div class="ends"><span>${d.lo}</span><span>${d.hi}</span></div></div></section>`;
+}
+const S = id => SINGLE.find(s => s.id === id);
+
+function renderSurvey(){
+  let h = `<div class="steps"><span class="on" id="st1">1 · Welcome and consent</span><span id="st2">2 · Survey</span><span id="st3">3 · Your summary</span></div>
+    <div id="step1"><header class="hero"><h1>Learning with AI: <span>your course review</span></h1>
+    <p>How the course worked for you, how you used AI in it, and how you see coding and analytics going forward.</p></header>
+    ${CONNECTED ? '' : '<div class="warn">Not connected to a Google Sheet yet. Paste the web app URL into SCRIPT_URL.</div>'}
+    <section class="card consent" id="c_consent" style="${acc('plum')}"><div class="qt">Consent to take part in research</div>
+      <div class="ctext">
+        <p><b>Purpose.</b> Your instructor is studying how students use AI and how they see coding and analytics, to improve how these courses are taught. The results may be published or presented.</p>
+        <p><b>What would be used.</b> Your survey answers and your course participation.</p>
+        <p><b>Your choice.</b> Taking part is voluntary. Agreeing or not agreeing has no effect on your grade. If you do not agree, you can still complete the survey as course feedback, and none of your answers or records will be used for research.</p>
+        <p><b>Privacy.</b> Names and emails are removed before analysis, and results are reported only for the class as a group. Risks are minimal. You can withdraw at any time by contacting the researcher.</p>
+        <p><b>Eligibility.</b> You must be 18 or older to agree.</p>
+        <p class="who">Researcher: Vinayaka Gude, Department of Management and Entrepreneurship, Elon University · Contact: [researcher email] · IRB approval: [protocol number]</p>
+      </div>
+      <div class="chips" data-id="consent"><button type="button" class="chip" data-i="0">I agree: use my answers and course participation for research</button><button type="button" class="chip" data-i="1">I do not agree: use my answers for course feedback only</button></div></section>
+    <section class="card" id="c_email" style="${acc('lagoon')}"><div class="qt">Your email</div>
+      <div class="email"><input type="email" id="email" placeholder="name@school.edu" autocomplete="email"></div><p class="hint">Your summary will be emailed here when you finish.</p></section>
+    <button class="go" id="next1">Continue to the survey</button><div class="err" id="err1"></div></div>
+    <div id="step2" class="hidden"><button class="ghostbtn back" id="back1">‹ Back to consent</button>`;
+  h += chipCard(S('help')) + chipCard(S('pace'));
+  h += chipCard(S('freq'));
+  h += `<div id="aiblock">`;
+  h += chipCard(S('tool')) + chipCard(S('mainuse'));
+  h += gridCard('habits', 'plum', 'When you used AI on coding work, how often did you...', HABITS, HAB);
+  h += chipCard(S('worked')) + chipCard(S('failed'));
+  h += `</div>`;
+  h += dotCard(DOTS[0]);
+  h += gridCard('views', 'sage', 'Coding and you', VIEWS, AGR);
+  h += gridCard('aiviews', 'plum', 'AI and you', AIVIEWS, AGR);
+  h += chipCard(S('change')) + chipCard(S('future')) + chipCard(S('skill')) + dotCard(DOTS[1]) + chipCard(S('keep'));
+  h += `<section class="card" id="c_moment" style="${acc('clay')}"><div class="qt">One moment when AI helped you learn, or got in your way</div><textarea id="moment" maxlength="400" placeholder="What happened?"></textarea></section>
+    <section class="card" id="c_improve" style="${acc('ochre')}"><div class="qt">One thing to change in this course next semester</div><textarea id="improve" maxlength="280" placeholder="What would you change?"></textarea></section>
+    <section class="card" id="c_advice" style="${acc('lagoon')}"><div class="qt">Your advice to next semester’s students on using AI in this course</div><textarea id="advice" maxlength="280" placeholder="One or two sentences"></textarea></section>
+    <button class="go" id="go">See my summary</button><div class="err" id="err"></div></div>`;
+  app.innerHTML = h;
+  wire();
+}
+
+function wire(){
+  app.querySelectorAll('.chips.multi').forEach(box => box.querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    const s = S(box.dataset.id), set = M[s.id] || (M[s.id] = new Set());
+    const key = b.dataset.i === 'other' ? '__other' : s.opts[+b.dataset.i];
+    if (set.has(key)) set.delete(key); else {
+      if (s.excl && key === s.excl) set.clear(); else if (s.excl) set.delete(s.excl);
+      set.add(key);
+    }
+    box.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', set.has(x.dataset.i === 'other' ? '__other' : s.opts[+x.dataset.i])));
+    const oin = document.getElementById('o_' + s.id);
+    if (oin) { oin.classList.toggle('hidden', !set.has('__other')); if (key === '__other' && set.has(key)) oin.focus(); }
+    if (mOk(s.id)) document.getElementById('c_' + s.id).classList.remove('miss');
+  }));
+  app.querySelectorAll('.chips:not(.multi)').forEach(box => box.querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    const s = S(box.dataset.id);
+    const oin = document.getElementById('o_' + s.id);
+    if (b.dataset.i === 'other') { A[s.id] = oin.value.trim(); oin.classList.remove('hidden'); oin.focus(); }
+    else { A[s.id] = s.opts[+b.dataset.i]; if (oin) oin.classList.add('hidden'); }
+    box.querySelectorAll('.chip').forEach(x => x.classList.remove('on')); b.classList.add('on');
+    document.getElementById('c_' + s.id).classList.remove('miss');
+    if (s.id === 'freq') document.getElementById('aiblock').classList.toggle('hidden', never());
+  }));
+  app.querySelectorAll('.otherin').forEach(inp => inp.oninput = () => {
+    const id = inp.id.slice(2);
+    if (MULTI.includes(id)) { if (mOk(id)) document.getElementById('c_' + id).classList.remove('miss'); return; }
+    A[id] = inp.value.trim();
+    if (A[id]) document.getElementById('c_' + id).classList.remove('miss');
+  });
+  app.querySelectorAll('.seg').forEach(seg => seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+    A[seg.dataset.k] = b.dataset.v; seg.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on');
+    const items = GRIDS[seg.dataset.g];
+    if (items.every(([k]) => A[k])) document.getElementById('c_' + seg.dataset.g).classList.remove('miss');
+  }));
+  app.querySelectorAll('.rng').forEach(r => {
+    const id = r.dataset.id;
+    const set = () => { A[id] = +r.value; r.classList.remove('untouched'); r.style.setProperty('--p', r.value + '%');
+      document.getElementById('big_' + id).textContent = r.value + '%'; document.getElementById('c_' + id).classList.remove('miss'); };
+    r.addEventListener('input', set); r.addEventListener('change', set); r.addEventListener('pointerdown', () => setTimeout(set, 0));
+  });
+  document.getElementById('email').oninput = () => document.getElementById('c_email').classList.remove('miss');
+  document.getElementById('go').onclick = submit;
+  document.getElementById('next1').onclick = () => {
+    const m = [];
+    if (!A.consent) m.push('c_consent');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim())) m.push('c_email');
+    ['c_consent','c_email'].forEach(id => document.getElementById(id).classList.toggle('miss', m.includes(id)));
+    if (m.length) { document.getElementById('err1').textContent = m.length === 2 ? 'Choose a consent option and enter your email.' : m[0] === 'c_consent' ? 'Choose a consent option to continue.' : 'Enter a valid email to continue.'; document.getElementById(m[0]).scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+    document.getElementById('err1').textContent = '';
+    goStep(2);
+  };
+  document.getElementById('back1').onclick = () => goStep(1);
+}
+
+function goStep(n){
+  document.getElementById('step1').classList.toggle('hidden', n !== 1);
+  document.getElementById('step2').classList.toggle('hidden', n !== 2);
+  [1,2,3].forEach(k => { const e = document.getElementById('st' + k); if (e) { e.classList.toggle('on', k === n); e.classList.toggle('dn', k < n); } });
+  scrollTo(0, 0);
+}
+
+function missing(){
+  const m = [];
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim())) m.push('c_email');
+  if (!A.consent) m.push('c_consent');
+  if (!mOk('help')) m.push('c_help');
+  ['pace','freq'].forEach(id => { if (!A[id]) m.push('c_' + id); });
+  if (!never()) {
+    ['tool','mainuse'].forEach(id => { if (!mOk(id)) m.push('c_' + id); });
+    if (!HABITS.every(([k]) => A[k])) m.push('c_habits');
+    ['worked','failed'].forEach(id => { if (!mOk(id)) m.push('c_' + id); });
+  }
+  if (A.redo === undefined) m.push('c_redo');
+  if (!VIEWS.every(([k]) => A[k])) m.push('c_views');
+  if (!AIVIEWS.every(([k]) => A[k])) m.push('c_aiviews');
+  ['change','future','skill'].forEach(id => { if (!A[id]) m.push('c_' + id); });
+  if (A.share2030 === undefined) m.push('c_share2030');
+  if (!A.keep) m.push('c_keep');
+  return m;
+}
+
+function habitScore(){
+  if (never()) return null;
+  let s = 0;
+  HABITS.forEach(([k, , w]) => { const v = HAB.indexOf(A[k]); s += w > 0 ? v : (2 - v); });
+  return Math.round(s / (HABITS.length * 2) * 100);
+}
+
+async function submit(){
+  const m = missing();
+  app.querySelectorAll('.card').forEach(c => c.classList.toggle('miss', m.includes(c.id)));
+  if (m.length) {
+    document.getElementById('err').textContent = m.length === 1 ? 'One answer is still missing.' : m.length + ' answers are still missing.';
+    document.getElementById(m[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+  const go = document.getElementById('go'); go.disabled = true; go.textContent = 'Sending...';
+  A.email = document.getElementById('email').value.trim();
+  A.moment = document.getElementById('moment').value.trim();
+  A.advice = document.getElementById('advice').value.trim();
+  A.improve = document.getElementById('improve').value.trim();
+  MULTI.forEach(id => A[id] = joinM(id));
+  if (never()) { ['tool','mainuse','worked','failed'].forEach(k => A[k] = ''); HABITS.forEach(([k]) => A[k] = ''); }
+  A.habit_score = habitScore() ?? '';
+  const p = { section: SECTION, consent: A.consent, consent_participation_records: A.consent === 'Agree' ? 'yes' : 'no', email: A.email };
+  ['help','pace','freq','tool','mainuse', ...HABITS.map(h => h[0]), 'habit_score','worked','failed','redo', ...VIEWS.map(v => v[0]), ...AIVIEWS.map(v => v[0]),
+   'change','future','skill','share2030','keep','moment','improve','advice'].forEach(k => p[k] = A[k] ?? '');
+  p.summary = summaryText();
+  try {
+    if (CONNECTED) await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(p) });
+    summary();
+  } catch (e) {
+    go.disabled = false; go.textContent = 'See my results';
+    document.getElementById('err').textContent = 'Could not send. Check your connection and try again.';
+  }
+}
+
+/* ============ PERSONAL SUMMARY ============ */
+function summaryText(){
+  const [name, line] = persona(), hs = habitScore(), L = s => s ? String(s).split('; ').join(', ') : '';
+  return `Learning with AI: your course review\n\n${name}\n${line}\n\n` +
+    `What helped you learn: ${L(A.help)}\nPace of the course: ${A.pace}\nHow often you used AI: ${A.freq}` + (A.tool ? ` (${L(A.tool)})` : '') + '\n' +
+    (hs === null ? '' : `Learning-first habits: ${hs} / 100\nUsed AI for: ${L(A.mainuse)}\nWhat worked: ${L(A.worked)}\nWhat went wrong: ${L(A.failed)}\n`) +
+    `Code you could write again without AI: ${A.redo}%\nCoding now: ${A.change}\nThe next five years: ${A.future}\nSkill that matters most: ${A.skill}\nAI's share of entry-level coding by 2030: ${A.share2030}%\nKeep coding: ${A.keep}` +
+    (A.advice ? `\nYour advice to next semester: ${A.advice}` : '');
+}
+function persona(){
+  const hs = habitScore(), hope = FUT.indexOf(A.future);
+  if (hs === null) return ["The Solo Coder", "You wrote this course’s code without AI. Every line you know is yours."];
+  if (hs >= 60) return hope === 2 ? ["The Co-pilot Captain", "You steer and AI assists. You try first, test what it gives you, and you are hopeful about where coding goes."]
+                                  : ["The Careful Builder", "You use AI as a tutor and check its work. You also see real risks ahead for analysts."];
+  if (hs >= 40) return ["The Balancer", "Some sessions you led and AI followed, some it was the other way round."];
+  return hope === 2 ? ["The Speed Runner", "AI got you to working code fast. The next step is making sure you can get there without it."]
+                    : ["The Passenger", "AI did a lot of the driving this term. Taking the wheel on a few problems will build the confidence you are missing."];
+}
+const tile = (l, v, extra = '', cls = '') => `<div class="tile ${cls}"><div class="l">${l}</div><div class="v">${esc(v)}</div>${extra}</div>`;
+
+function summary(){
+  const [name, line] = persona(), hs = habitScore();
+  scrollTo(0, 0);
+  const stepsBar = `<div class="steps"><span class="dn">1 · Welcome and consent</span><span class="dn">2 · Survey</span><span class="on">3 · Your summary</span></div>`;
+  const meter = (id, v, lo, hi) => `<div class="meter"><i style="left:${v}%"></i><b id="mk_${id}" class="hidden"></b></div><div class="mrow"><span>${lo}</span><span id="cl_${id}"></span><span>${hi}</span></div>`;
+  app.innerHTML = stepsBar + `<div class="sum">
+    <div class="persona"><div class="k">Learning with AI · your course review</div><h1>${name}</h1><p>${line}</p>
+      <span class="badge">${hs === null ? 'No AI used' : 'Learning-first habits: ' + hs + ' / 100'}</span></div>
+    <div class="grid">
+      ${tile('Helped me learn', A.help.split('; ').join(', '))}
+      ${tile('Used AI', A.freq + (A.tool ? ' · ' + A.tool.split('; ').join(', ') : ''))}
+      ${tile('Could write again without AI', A.redo + '% of my code', meter('redo', A.redo, 'None', 'All'))}
+      ${tile('AI’s share of entry-level coding by 2030', A.share2030 + '%', meter('share2030', A.share2030, 'Almost none', 'Almost all'))}
+      ${hs === null ? '' : tile('What worked', A.worked.split('; ').join(', ')) + tile('What went wrong', A.failed.split('; ').join(', '))}
+      ${tile('Coding now', A.change, '<div class="mrow" id="cl_change"></div>')}
+      ${tile('About the next five years', A.future, '<div class="mrow" id="cl_future"></div>')}
+      ${tile('The skill that matters most', A.skill)}
+    </div>
+    <div class="actions"><button class="ghostbtn" id="cp">Copy my summary</button></div>
+    <p class="sent">${CONNECTED ? `A copy of this summary is on its way to ${esc(A.email)}. Check your spam folder if it does not arrive in a few minutes.` : 'Email is sent once the survey is connected to the Google Sheet.'}</p>
+  </div>`;
+  document.getElementById('cp').onclick = () => {
+    const txt = summaryText();
+    try { navigator.clipboard.writeText(txt).then(() => document.getElementById('cp').textContent = 'Copied'); } catch (e) {}
+  };
+  classCompare();
+}
+
+async function classCompare(){
+  if (!CONNECTED) return;
+  try {
+    const rs = (await (await fetch(SCRIPT_URL + '?section=' + encodeURIComponent(SECTION) + '&t=' + Date.now())).json()).rows || [];
+    if (rs.length < 3) return;
+    ['redo','share2030'].forEach(k => {
+      const a = Math.round(avg(rs.map(r => Number(r[k])).filter(v => !isNaN(v))));
+      document.getElementById('cl_' + k).textContent = 'Class average ' + a + '%';
+      const mk = document.getElementById('mk_' + k); mk.style.left = a + '%'; mk.classList.remove('hidden');
+    });
+    ['change','future'].forEach(k => document.getElementById('cl_' + k).innerHTML = `<span>${pct(rs.filter(r => r[k] === A[k]).length, rs.length)}% of the class said the same</span>`);
+  } catch (e) {}
+}
+
+/* ============ CLASS RESULTS (?results) ============ */
+let rows = [];
+const cnt = (k, opts) => opts.map(o => rows.filter(r => r[k] === o).length);
+const stk = (vals, cls) => `<div class="stk">${vals.map((v, i) => v > 0 ? `<div class="${cls[i]}" style="width:${v}%">${v >= 8 ? v + '%' : ''}</div>` : '').join('')}</div>`;
+function hbars(labels, vals, total, color){
+  const z = labels.map((l, i) => [l, vals[i]]).sort((a, b) => b[1] - a[1]); const mx = Math.max(1, ...z.map(x => x[1]));
+  return z.map(([l, v]) => `<div class="hb" style="--c:${color}"><div>${esc(l)}</div><div class="tr"><i style="width:${pct(v, mx)}%"></i></div><b>${pct(v, total)}%</b></div>`).join('');
+}
+function multiOther(key, opts, color){
+  const rs = rows.filter(r => String(r[key] || '').trim()), parts = rs.map(r => String(r[key]).split('; ').map(x => x.trim()).filter(Boolean));
+  const vals = opts.map(o => parts.filter(p => p.includes(o)).length);
+  const own = parts.flat().filter(v => !opts.includes(v));
+  let h = hbars(opts.concat('Their own answer'), vals.concat(parts.filter(p => p.some(v => !opts.includes(v))).length), rs.length, color);
+  const uniq = [...new Set(own)].sort(() => Math.random() - .5).slice(0, 6);
+  if (uniq.length) h += `<div class="quotes" style="margin-top:12px">${uniq.map(q => `<div>${esc(q)}</div>`).join('')}</div>`;
+  return h + `<div class="src">Share of respondents who picked each; people could pick several.</div>`;
+}
+function withOther(key, opts, color){
+  const rs = rows.filter(r => r[key]), own = rs.map(r => String(r[key]).trim()).filter(v => !opts.includes(v));
+  let h = hbars(opts.concat('Their own answer'), cnt(key, opts).concat(own.length), rs.length, color);
+  const uniq = [...new Set(own)].sort(() => Math.random() - .5).slice(0, 6);
+  if (uniq.length) h += `<div class="quotes" style="margin-top:12px">${uniq.map(q => `<div>${esc(q)}</div>`).join('')}</div>`;
+  return h;
+}
+function stackGrid(items, scale, cls){
+  return items.map(([k, n]) => {
+    const rs = rows.filter(r => r[k]), c = scale.map(s => rs.filter(r => r[k] === s).length);
+    return `<div class="lab"><span>${esc(n)}</span><b>${rs.length}</b></div>${stk(c.map(v => pct(v, rs.length)), cls)}`;
+  }).join('') + `<div class="lg">${scale.map((s, i) => `<span style="--c:var(--${['clay','ochre','sage'][i]})">${s}</span>`).join('')}</div>`;
+}
+const hist = (k) => { const b = Array(11).fill(0); rows.forEach(r => { const v = Number(r[k]); if (r[k] !== '' && !isNaN(v)) b[Math.round(v / 10)]++; }); const mx = Math.max(1, ...b);
+  return `<div class="hist">${b.map(v => `<div style="height:${pct(v, mx)}%" title="${v}"></div>`).join('')}</div><div class="ends"><span>0%</span><span>100%</span></div>`; };
+
+async function loadResults(){
+  if (CONNECTED) { try { rows = (await (await fetch(SCRIPT_URL + '?section=' + encodeURIComponent(SECTION) + '&t=' + Date.now())).json()).rows || []; } catch (e) { rows = null; } }
+  drawResults();
+}
+function drawResults(){
+  let h = `<div class="rtop"><h1>Our course review</h1><button class="ghostbtn" id="rf">Refresh</button></div>`;
+  if (!CONNECTED) { app.innerHTML = h + '<div class="warn">Connect the survey to a Google Sheet to see results.</div>'; return wireR(); }
+  if (rows === null) { app.innerHTML = h + '<div class="warn">Could not load results. Check the web app is deployed for "Anyone".</div>'; return wireR(); }
+  const n = rows.length;
+  if (!n) { app.innerHTML = h + '<section class="card">No responses yet.</section>'; return wireR(); }
+  const num = k => rows.map(r => Number(r[k])).filter((v, i) => rows[i][k] !== '' && !isNaN(v));
+  const users = rows.filter(r => r.freq && r.freq !== 'Never');
+  h += `<div class="kpis">
+    <div class="kpi" style="--c:var(--lagoon)"><b>${n}</b><span>responses · ${rows.filter(r => r.consent === 'Agree').length} agreed to research</span></div>
+    <div class="kpi" style="--c:var(--plum)"><b>${pct(rows.filter(r => r.freq === FREQ[0] || r.freq === FREQ[1]).length, n)}%</b><span>used AI most weeks or more</span></div>
+    <div class="kpi" style="--c:var(--sage)"><b>${Math.round(avg(num('redo')))}%</b><span>could write their code again without AI</span></div>
+    <div class="kpi" style="--c:var(--ochre)"><b>${Math.round(avg(num('share2030')))}%</b><span>AI’s share of entry-level coding by 2030</span></div></div>`;
+  h += `<section class="card" style="${acc('lagoon')}"><div class="qt">Pace of the course</div>${stk(cnt('pace', PACE).map(v => pct(v, n)), ['kc','ks','ko'])}
+    <div class="lg">${PACE.map((c, i) => `<span style="--c:var(--${['clay','sage','ochre'][i]})">${c}</span>`).join('')}</div></section>`;
+  h += `<section class="card" style="${acc('ochre')}"><div class="qt">What helped us learn</div>${multiOther('help', HELP, 'var(--ochre)')}</section>`;
+  h += `<section class="card" style="${acc('ochre')}"><div class="qt">How often we used AI</div>${hbars(FREQ, cnt('freq', FREQ), n, 'var(--ochre)')}</section>`;
+  if (users.length) {
+    h += `<section class="card" style="${acc('plum')}"><div class="qt">Our AI habits</div>${stackGrid(HABITS, HAB, ['kc','ko','ks'])}
+      <div class="src">Learning-first habit score, class average: ${Math.round(avg(num('habit_score')))} / 100</div></section>`;
+    h += `<section class="card" style="${acc('plum')}"><div class="qt">Tools we used</div>${multiOther('tool', TOOL, 'var(--plum)')}</section>`;
+    h += `<section class="card" style="${acc('lagoon')}"><div class="qt">What we used it for</div>${multiOther('mainuse', MAINUSE, 'var(--lagoon)')}</section>`;
+    h += `<section class="card" style="${acc('sage')}"><div class="qt">What worked</div>${multiOther('worked', WORKED, 'var(--sage)')}</section>`;
+    h += `<section class="card" style="${acc('clay')}"><div class="qt">What went wrong</div>${multiOther('failed', FAILED, 'var(--clay)')}</section>`;
+  }
+  h += `<section class="card" style="${acc('lagoon')}"><div class="qt">Could you write your code again without AI?</div>${hist('redo')}</section>`;
+  h += `<section class="card" style="${acc('sage')}"><div class="qt">Coding and us</div>${stackGrid(VIEWS, AGR, ['kc','ko','ks'])}</section>`;
+  const cc = cnt('change', CHANGE), fc = cnt('future', FUT);
+  h += `<section class="card" style="${acc('plum')}"><div class="qt">AI and us</div>${stackGrid(AIVIEWS, AGR, ['kc','ko','ks'])}</section>`;
+  h += `<section class="card" style="${acc('ochre')}"><div class="qt">Coding now, and the next five years</div>
+    <div class="lab"><span>Compared with the start of the course</span></div>${stk(cc.map(v => pct(v, n)), ['ks','ko','kg','kc'])}
+    <div class="lg">${CHANGE.map((c, i) => `<span style="--c:var(--${['sage','ochre','mute','clay'][i]})">${c}</span>`).join('')}</div>
+    <div class="lab" style="margin-top:22px"><span>Jobs in coding and analytics</span></div>${stk(fc.map(v => pct(v, n)), ['kc','kg','ks'])}
+    <div class="lg">${FUT.map((c, i) => `<span style="--c:var(--${['clay','mute','sage'][i]})">${c}</span>`).join('')}</div></section>`;
+  h += `<section class="card" style="${acc('plum')}"><div class="qt">The skill that will matter most</div>${withOther('skill', SKILL, 'var(--plum)')}</section>`;
+  h += `<section class="card" style="${acc('ochre')}"><div class="qt">AI’s share of entry-level coding by 2030</div>${hist('share2030')}</section>`;
+  h += `<section class="card" style="${acc('sage')}"><div class="qt">Will we keep coding?</div>${hbars(KEEP, cnt('keep', KEEP), n, 'var(--sage)')}</section>`;
+  const adv = [...new Set(rows.map(r => String(r.advice || '').trim()).filter(Boolean))].sort(() => Math.random() - .5).slice(0, 8);
+  const mom = [...new Set(rows.map(r => String(r.moment || '').trim()).filter(Boolean))].sort(() => Math.random() - .5).slice(0, 6);
+  if (mom.length) h += `<section class="card" style="${acc('clay')}"><div class="qt">Moments with AI</div><div class="quotes">${mom.map(q => `<div>${esc(q)}</div>`).join('')}</div></section>`;
+  const imp = [...new Set(rows.map(r => String(r.improve || '').trim()).filter(Boolean))].sort(() => Math.random() - .5).slice(0, 8);
+  if (imp.length) h += `<section class="card" style="${acc('ochre')}"><div class="qt">What to change next semester</div><div class="quotes">${imp.map(q => `<div>${esc(q)}</div>`).join('')}</div></section>`;
+  if (adv.length) h += `<section class="card" style="${acc('lagoon')}"><div class="qt">Advice to next semester</div><div class="quotes">${adv.map(q => `<div>${esc(q)}</div>`).join('')}</div></section>`;
+  app.innerHTML = h; wireR();
+}
+function wireR(){ const b = document.getElementById('rf'); if (b) b.onclick = loadResults; }
+
+if (params.has('results')) loadResults(); else renderSurvey();
+})();
+</script>
+</body>
+</html>
